@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introduction to DBMS</title>
+  <style>
+    /* =========================
+       Global Styles
+    ========================== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #f5f7fb;
+      color: #263238;
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1180px;
+      margin: auto;
+    }
+
+    section {
+      padding: 78px 0;
+    }
+
+    .section-title {
+      text-align: center;
+      color: #17324d;
+      font-size: 2.15rem;
+      margin-bottom: 12px;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      max-width: 760px;
+      margin: 0 auto 44px;
+      color: #607d8b;
+      font-size: 1rem;
+    }
+
+    /* =========================
+       Navigation Bar
+    ========================== */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .nav-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 0;
+    }
+
+    .logo {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #17324d;
+    }
+
+    .logo span {
+      color: #00a6a6;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      font-size: 0.93rem;
+      color: #455a64;
+    }
+
+    .nav-links a:hover {
+      color: #00a6a6;
+    }
+
+    /* =========================
+       Hero Section
+    ========================== */
+    .hero {
+      min-height: 88vh;
+      display: flex;
+      align-items: center;
+      background: linear-gradient(135deg, #e8f7f7 0%, #f8fbff 50%, #edf2ff 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      width: 360px;
+      height: 360px;
+      border-radius: 50%;
+      background: rgba(0, 166, 166, 0.13);
+      top: -110px;
+      right: -110px;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: rgba(23, 50, 77, 0.08);
+      bottom: -90px;
+      left: -80px;
+    }
+
+    .hero-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 46px;
+      align-items: center;
+    }
+
+    .hero-text h1 {
+      font-size: 3.45rem;
+      color: #17324d;
+      line-height: 1.12;
+      margin-bottom: 20px;
+    }
+
+    .hero-text p {
+      color: #546e7a;
+      font-size: 1.15rem;
+      max-width: 640px;
+      margin-bottom: 30px;
+    }
+
+    .btn {
+      display: inline-block;
+      background: #00a6a6;
+      color: #ffffff;
+      padding: 14px 28px;
+      border-radius: 30px;
+      font-weight: 700;
+      box-shadow: 0 12px 26px rgba(0, 166, 166, 0.24);
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      background: #008c8c;
+    }
+
+    .hero-card {
+      background: #ffffff;
+      border-radius: 26px;
+      padding: 34px;
+      box-shadow: 0 24px 58px rgba(23, 50, 77, 0.13);
+      border: 1px solid #e9eef5;
+    }
+
+    .hero-card h3 {
+      color: #17324d;
+      margin-bottom: 20px;
+      font-size: 1.35rem;
+    }
+
+    .data-flow {
+      display: grid;
+      gap: 15px;
+    }
+
+    .flow-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: #f1f9fb;
+      border-radius: 17px;
+      padding: 15px;
+    }
+
+    .icon-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #dff5f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.35rem;
+      flex-shrink: 0;
+    }
+
+    /* =========================
+       Reusable Cards
+    ========================== */
+    .highlight-box {
+      max-width: 880px;
+      margin: auto;
+      background: #eaf7f7;
+      border-left: 6px solid #00a6a6;
+      padding: 28px;
+      border-radius: 18px;
+      color: #37474f;
+      font-size: 1.02rem;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 22px;
+      padding: 27px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
+      border: 1px solid #edf2f6;
+      transition: 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.09);
+    }
+
+    .card-icon {
+      font-size: 2rem;
+      margin-bottom: 14px;
+    }
+
+    .card h3 {
+      color: #17324d;
+      margin-bottom: 9px;
+      font-size: 1.18rem;
+    }
+
+    .card p {
+      color: #546e7a;
+      font-size: 0.97rem;
+    }
+
+    .two-column {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 26px;
+    }
+
+    /* =========================
+       Terms Section
+    ========================== */
+    .terms-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .term {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.05);
+      border-top: 4px solid #00a6a6;
+    }
+
+    .term h4 {
+      color: #17324d;
+      margin-bottom: 8px;
+    }
+
+    .term p {
+      color: #607d8b;
+      font-size: 0.93rem;
+    }
+
+    /* =========================
+       Comparison Table
+    ========================== */
+    .table-card {
+      background: #ffffff;
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 680px;
+    }
+
+    th {
+      background: #17324d;
+      color: #ffffff;
+      padding: 14px;
+      text-align: left;
+    }
+
+    td {
+      padding: 14px;
+      border-bottom: 1px solid #e5edf2;
+      color: #455a64;
+    }
+
+    tr:nth-child(even) td {
+      background: #f7fbff;
+    }
+
+    /* =========================
+       Student Database Example
+    ========================== */
+    .example-note {
+      background: #fff7e8;
+      border-left: 6px solid #f4a261;
+      padding: 20px;
+      border-radius: 16px;
+      color: #5f4b32;
+      margin-top: 22px;
+    }
+
+    /* =========================
+       Quiz Section
+    ========================== */
+    .quiz-container {
+      max-width: 930px;
+      margin: auto;
+      display: grid;
+      gap: 20px;
+    }
+
+    .quiz-card {
+      background: #ffffff;
+      padding: 24px;
+      border-radius: 20px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
+    }
+
+    .quiz-card h3 {
+      color: #17324d;
+      margin-bottom: 14px;
+      font-size: 1.08rem;
+    }
+
+    .options {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .option {
+      background: #f5f8fb;
+      padding: 12px 14px;
+      border-radius: 12px;
+      color: #455a64;
+    }
+
+    .answer-btn {
+      border: none;
+      background: #17324d;
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: 22px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .answer-btn:hover {
+      background: #00a6a6;
+    }
+
+    .answer {
+      display: none;
+      margin-top: 12px;
+      background: #eaf7f7;
+      color: #17324d;
+      padding: 13px;
+      border-radius: 12px;
+      font-weight: 700;
+    }
+
+    /* =========================
+       Summary Section
+    ========================== */
+    .summary-list {
+      max-width: 880px;
+      margin: auto;
+      display: grid;
+      gap: 16px;
+    }
+
+    .summary-item {
+      background: #ffffff;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 20px;
+      border-radius: 18px;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.05);
+    }
+
+    .summary-number {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: #00a6a6;
+      color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    /* =========================
+       Footer
+    ========================== */
+    footer {
+      background: #17324d;
+      color: #ffffff;
+      text-align: center;
+      padding: 25px;
+    }
+
+    /* =========================
+       Responsive Design
+    ========================== */
+    @media (max-width: 920px) {
+      .hero-grid,
+      .two-column,
+      .cards-grid,
+      .terms-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-text h1 {
+        font-size: 2.65rem;
+      }
+
+      .nav-links {
+        display: none;
+      }
+    }
+
+    @media (max-width: 560px) {
+      section {
+        padding: 58px 0;
+      }
+
+      .hero-text h1 {
+        font-size: 2.2rem;
+      }
+
+      .hero-card,
+      .card,
+      .table-card {
+        padding: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =========================
+       Navigation Bar
+  ========================== -->
+  <nav class="navbar">
+    <div class="container nav-content">
+      <div class="logo">DBMS<span>Basics</span></div>
+      <div class="nav-links">
+        <a href="#what">What is DBMS?</a>
+        <a href="#need">Need</a>
+        <a href="#features">Features</a>
+        <a href="#types">Types</a>
+        <a href="#quiz">Quiz</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- =========================
+       Hero Section
+  ========================== -->
+  <header class="hero" id="home">
+    <div class="container hero-grid">
+      <div class="hero-text">
+        <h1>Introduction to DBMS</h1>
+        <p>Understanding how data is stored, organized, managed, and accessed efficiently.</p>
+        <a href="#what" class="btn">Start Learning</a>
+      </div>
+
+      <div class="hero-card">
+        <h3>How DBMS Works</h3>
+        <div class="data-flow">
+          <div class="flow-item">
+            <div class="icon-circle">🧾</div>
+            <div><strong>Data</strong><br />Information is collected from users or systems.</div>
+          </div>
+          <div class="flow-item">
+            <div class="icon-circle">🗄️</div>
+            <div><strong>Database</strong><br />Data is stored in an organized structure.</div>
+          </div>
+          <div class="flow-item">
+            <div class="icon-circle">⚙️</div>
+            <div><strong>DBMS</strong><br />Software helps store, search, update, and protect data.</div>
+          </div>
+          <div class="flow-item">
+            <div class="icon-circle">📊</div>
+            <div><strong>Useful Output</strong><br />Users get reports, records, and insights quickly.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================
+       What is DBMS Section
+  ========================== -->
+  <section id="what">
+    <div class="container">
+      <h2 class="section-title">What is DBMS?</h2>
+      <p class="section-subtitle">DBMS stands for Database Management System.</p>
+      <div class="highlight-box">
+        A <strong>Database Management System</strong> is software that helps users create, store, manage, retrieve, and update data in a database. In simple words, DBMS acts as a bridge between users and stored data. It makes data handling faster, safer, and more organized.
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================
+       Why Do We Need DBMS Section
+  ========================== -->
+  <section id="need" style="background:#ffffff;">
+    <div class="container">
+      <h2 class="section-title">Why Do We Need DBMS?</h2>
+      <p class="section-subtitle">Traditional file systems can create many problems when data becomes large and complex.</p>
+      <div class="cards-grid">
+        <div class="card">
+          <div class="card-icon">📁</div>
+          <h3>Data Duplication</h3>
+          <p>The same data may be stored in many files, wasting space and creating confusion.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔍</div>
+          <h3>Difficult Searching</h3>
+          <p>Finding the required information from several files can be slow and inconvenient.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔐</div>
+          <h3>Poor Security</h3>
+          <p>Files may not provide proper control over who can view, edit, or delete data.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">⚠️</div>
+          <h3>Data Inconsistency</h3>
+          <p>If the same data is stored in different places, one file may be updated while another remains old.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🤝</div>
+          <h3>Lack of Sharing</h3>
+          <p>Multiple users may find it difficult to access and use the same data at the same time.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🛡️</div>
+          <h3>Backup Challenges</h3>
+          <p>Recovering data after accidental deletion or system failure can be difficult in file systems.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================
+       Key Features of DBMS Section
+  ========================== -->
+  <section id="features">
+    <div class="container">
+      <h2 class="section-title">Key Features of DBMS</h2>
+      <p class="section-subtitle">DBMS provides several features that make data management more effective.</p>
+      <div class="cards-grid">
+        <div class="card"><div class="card-icon">🗂️</div><h3>Data Storage</h3><p>Stores data in a structured and organized manner for easy management.</p></div>
+        <div class="card"><div class="card-icon">🔎</div><h3>Data Retrieval</h3><p>Helps users search and retrieve required data quickly using queries.</p></div>
+        <div class="card"><div class="card-icon">🔒</div><h3>Data Security</h3><p>Protects data by controlling user access and permissions.</p></div>
+        <div class="card"><div class="card-icon">✅</div><h3>Data Integrity</h3><p>Maintains accuracy and consistency of data through rules and constraints.</p></div>
+        <div class="card"><div class="card-icon">👥</div><h3>Data Sharing</h3><p>Allows multiple users to access and work with data efficiently.</p></div>
+        <div class="card"><div class="card-icon">💾</div><h3>Backup & Recovery</h3><p>Helps restore data in case of system failure or accidental loss.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================
+       Types of Databases Section
+  ========================== -->
+  <section id="types" style="background:#ffffff;">
+    <div class="container">
+      <h2 class="section-title">Types of Databases</h2>
+      <p class="section-subtitle">Different database models are used depending on how data needs to be stored and accessed.</p>
+      <div class="cards-grid">
+        <div class="card"><div class="card-icon">🌳</div><h3>Hierarchical Database</h3><p>Stores data in a tree-like structure with parent and child relationships.</p></div>
+        <div class="card"><div class="card-icon">🕸️</div><h3>Network Database</h3><p>Stores data using many-to-many relationships, similar to a connected network.</p></div>
+        <div class="card"><div class="card-icon">📋</div><h3>Relational Database</h3><p>Stores data in tables made of rows and columns. It is widely used in business systems.</p></div>
+        <div class="card"><div class="card-icon">🧱</div><h3>Object-Oriented Database</h3><p>Stores data as objects, similar to object-oriented programming concepts.</p></div>
+        <div class="card"><div class="card-icon">⚡</div><h3>NoSQL Database</h3><p>Used for flexible, large-scale, and unstructured data such as social media or web data.</p></div>
+        <div class="card"><div class="card-icon">🏢</div><h3>Business Use</h3><p>Organizations choose database types based on data size, speed, structure, and purpose.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================
+       DBMS vs RDBMS Section
+  ========================== -->
+  <section id="comparison">
+    <div class="container">
+      <h2 class="section-title">DBMS vs RDBMS</h2>
+      <p class="section-subtitle">RDBMS is a more advanced form of DBMS based on relational tables.</p>
+      <div class="table-card">
+        <table>
+          <tr>
+            <th>Basis</th>
+            <th>DBMS</th>
+            <th>RDBMS</th>
+          </tr>
+          <tr>
+            <td>Structure</td>
+            <td>Data may be stored as files or records.</td>
+            <td>Data is stored in tables with rows and columns.</td>
+          </tr>
+          <tr>
+            <td>Relationship</td>
+            <td>Relationships between data may not be strongly supported.</td>
+            <td>Relationships between tables are created using keys.</td>
+          </tr>
+          <tr>
+            <td>Data Handling</td>
+            <td>Suitable for small and simple data management.</td>
+            <td>Suitable for large, structured, and complex data management.</td>
+          </tr>
+          <tr>
+            <td>Examples</td>
+            <td>File-based systems, XML-based databases.</td>
+            <td>MySQL, Oracle, PostgreSQL, SQL Server.</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================
+       Important DBMS Terms Section
+  ========================== -->
+  <section id="terms" style="background:#ffffff;">
+    <div class="container">
+      <h2 class="section-title">Important DBMS Terms</h2>
+      <p class="section-subtitle">These terms are useful for understanding the basics of database management.</p>
+      <div class="terms-grid">
+        <div class="term"><h4>Data</h4><p>Raw facts such as names, numbers, marks, or dates.</p></div>
+        <div class="term"><h4>Database</h4><p>An organized collection of related data.</p></div>
+        <div class="term"><h4>Table</h4><p>A structure that stores data in rows and columns.</p></div>
+        <div class="term"><h4>Row / Tuple</h4><p>A single record in a table.</p></div>
+        <div class="term"><h4>Column / Attribute</h4><p>A field that describes a property of data.</p></div>
+        <div class="term"><h4>Primary Key</h4><p>A unique value used to identify each record.</p></div>
+        <div class="term"><h4>Foreign Key</h4><p>A field used to connect one table with another table.</p></div>
+        <div class="term"><h4>Query</h4><p>A request made to retrieve or modify data.</p></div>
+        <div class="term"><h4>SQL</h4><p>A language used to communicate with relational databases.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================
+       Real-Life Examples Section
+  ========================== -->
+  <section id="examples">
+    <div class="container">
+      <h2 class="section-title">Real-Life Examples of DBMS</h2>
+      <p class="section-subtitle">DBMS is used in many everyday systems that store and process large amounts of data.</p>
+      <div class="cards-grid">
+        <div class="card"><div class="card-icon">🏦</div><h3>Banking Systems</h3><p>Used to manage customer accounts, transactions, loans, and ATM operations.</p></div>
+        <div class="card"><div class="card-icon">🎓</div><h3>College Records</h3><p>Used to store student details, marks, attendance, fees, and course information.</p></div>
+        <div class="card"><div class="card-icon">🛒</div><h3>Online Shopping</h3><p>Used to manage products, customers, orders, payments, and delivery details.</p></div>
+        <div class="card"><div class="card-icon">🏥</div><h3>Hospital Management</h3><p>Used to manage patient records, appointments, doctors, billing, and medicines.</p></div>
+        <div class="card"><div class="card-icon">🚆</div><h3>Reservation Systems</h3><p>Used in railways and airlines to manage tickets, seats, passengers, and schedules.</p></div>
+        <div class="card"><div class="card-icon">📱</div><h3>Mobile Applications</h3><p>Many apps use databases to store user profiles, activity history, and preferences.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================
+       Simple Student Database Example Section
+  ========================== -->
+  <section id="student-example" style="background:#ffffff;">
+    <div class="container">
+      <h2 class="section-title">Simple Student Database Example</h2>
+      <p class="section-subtitle">A student table is a simple way to understand how data is organized in a database.</p>
+      <div class="table-card">
+        <table>
+          <tr>
+            <th>Student_ID</th>
+            <th>Student_Name</th>
+            <th>Course</th>
+            <th>Marks</th>
+          </tr>
+          <tr>
+            <td>101</td>
+            <td>Aarav Sharma</td>
+            <td>DBMS</td>
+            <td>86</td>
+          </tr>
+          <tr>
+            <td>102</td>
+            <td>Meera Nair</td>
+            <td>DBMS</td>
+            <td>91</td>
+          </tr>
+          <tr>
+            <td>103</td>
+            <td>Rahul Verma</td>
+            <td>Business Analytics</td>
+            <td>78</td>
+          </tr>
+          <tr>
+            <td>104</td>
+            <td>Ananya Rao</td>
+            <td>DBMS</td>
+            <td>88</td>
+          </tr>
+        </table>
+        <div class="example-note">
+          In this table, <strong>Student_ID</strong> can be used as a primary key because it uniquely identifies each student. A DBMS helps users search for a student, update marks, add new records, delete old records, and generate reports easily.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================
+       Quick Quiz Section
+  ========================== -->
+  <section id="quiz">
+    <div class="container">
+      <h2 class="section-title">Quick Quiz</h2>
+      <p class="section-subtitle">Test your understanding by answering these simple questions.</p>
+      <div class="quiz-container">
+        <div class="quiz-card">
+          <h3>1. What does DBMS stand for?</h3>
+          <div class="options">
+            <div class="option">A. Data Backup Management Software</div>
+            <div class="option">B. Database Management System</div>
+            <div class="option">C. Digital Business Management System</div>
+          </div>
+          <button class="answer-btn" onclick="toggleAnswer('answer1')">Show Answer</button>
+          <div class="answer" id="answer1">Correct Answer: B. Database Management System</div>
+        </div>
+
+        <div class="quiz-card">
+          <h3>2. Which of the following is a feature of DBMS?</h3>
+          <div class="options">
+            <div class="option">A. Data security</div>
+            <div class="option">B. Data confusion</div>
+            <div class="option">C. Data loss only</div>
+          </div>
+          <button class="answer-btn" onclick="toggleAnswer('answer2')">Show Answer</button>
+          <div class="answer" id="answer2">Correct Answer: A. Data security</div>
+        </div>
+
+        <div class="quiz-card">
+          <h3>3. In a relational database, data is usually stored in:</h3>
+          <div class="options">
+            <div class="option">A. Tables</div>
+            <div class="option">B. Paint files</div>
+            <div class="option">C. Audio files</div>
+          </div>
+          <button class="answer-btn" onclick="toggleAnswer('answer3')">Show Answer</button>
+          <div class="answer" id="answer3">Correct Answer: A. Tables</div>
+        </div>
+
+        <div class="quiz-card">
+          <h3>4. What is a primary key?</h3>
+          <div class="options">
+            <div class="option">A. A duplicate value in a table</div>
+            <div class="option">B. A unique value used to identify records</div>
+            <div class="option">C. A password for a database</div>
+          </div>
+          <button class="answer-btn" onclick="toggleAnswer('answer4')">Show Answer</button>
+          <div class="answer" id="answer4">Correct Answer: B. A unique value used to identify records</div>
+        </div>
+
+        <div class="quiz-card">
+          <h3>5. Which language is commonly used to work with relational databases?</h3>
+          <div class="options">
+            <div class="option">A. SQL</div>
+            <div class="option">B. HTML only</div>
+            <div class="option">C. Photoshop</div>
+          </div>
+          <button class="answer-btn" onclick="toggleAnswer('answer5')">Show Answer</button>
+          <div class="answer" id="answer5">Correct Answer: A. SQL</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================
+       Summary Section
+  ========================== -->
+  <section id="summary" style="background:#ffffff;">
+    <div class="container">
+      <h2 class="section-title">Summary: Key Takeaways</h2>
+      <p class="section-subtitle">Here are the important points to remember from this lesson.</p>
+      <div class="summary-list">
+        <div class="summary-item"><div class="summary-number">1</div><p>DBMS is software that helps users create, store, manage, retrieve, and update data in databases.</p></div>
+        <div class="summary-item"><div class="summary-number">2</div><p>DBMS reduces problems such as data duplication, poor security, inconsistency, and difficulty in searching.</p></div>
+        <div class="summary-item"><div class="summary-number">3</div><p>Important DBMS features include data storage, retrieval, security, integrity, sharing, backup, and recovery.</p></div>
+        <div class="summary-item"><div class="summary-number">4</div><p>Relational databases store data in tables, and SQL is used to communicate with them.</p></div>
+        <div class="summary-item"><div class="summary-number">5</div><p>DBMS is widely used in banking, colleges, hospitals, online shopping, and reservation systems.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================
+       Footer
+  ========================== -->
+  <footer>
+    <p>Created for educational purposes</p>
+  </footer>
+
+  <!-- =========================
+       JavaScript for Quiz Answers
+  ========================== -->
+  <script>
+    function toggleAnswer(answerId) {
+      const answer = document.getElementById(answerId);
+      if (answer.style.display === "block") {
+        answer.style.display = "none";
+      } else {
+        answer.style.display = "block";
+      }
+    }
+  </script>
+
+</body>
+</html>
